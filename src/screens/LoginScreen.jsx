@@ -1,3 +1,4 @@
+import { useNavigation } from "@react-navigation/native";
 import { useRef, useState } from "react";
 import {
   View,
@@ -16,6 +17,8 @@ export const LoginScreen = () => {
   const [isFocus, setIsFocus] = useState(false);
   const [isShowPass, setIsShowPass] = useState(true);
 
+  const navigation = useNavigation();
+
   const emailInput = useRef();
   const passInput = useRef();
 
@@ -27,6 +30,7 @@ export const LoginScreen = () => {
     console.log(credentials);
     setEmail(null);
     setPassword(null);
+    navigation.navigate("Home", { screen: "PostsScreen" });
   };
 
   const handleOnFocus = (type, inputName) => {
@@ -59,49 +63,51 @@ export const LoginScreen = () => {
 
   return (
     <TouchableWithoutFeedback onPress={Keyboard.dismiss}>
-      <View style={styles.loginContainer}>
-        <Text style={styles.title}>Увійти</Text>
-        <KeyboardAvoidingView
-          behavior={Platform.OS === "ios" ? "padding" : "height"}
-        >
-          <TextInput
-            ref={emailInput}
-            style={inputStyle(emailInput)}
-            placeholder="Адреса електронної пошти"
-            inputMode="email"
-            placeholderTextColor="#BDBDBD"
-            onChangeText={setEmail}
-            value={email}
-            onFocus={handleOnFocus("focus", "emailInput")}
-            onBlur={handleOnFocus("blur", "emailInput")}
-          />
-          <View style={styles.passwordInput}>
+      <View style={styles.container}>
+        <View style={styles.loginContainer}>
+          <Text style={styles.title}>Увійти</Text>
+          <KeyboardAvoidingView
+            behavior={Platform.OS === "ios" ? "padding" : "height"}
+          >
             <TextInput
-              ref={passInput}
-              style={[...inputStyle(passInput), { marginBottom: 43 }]}
-              placeholder="Пароль"
+              ref={emailInput}
+              style={inputStyle(emailInput)}
+              placeholder="Адреса електронної пошти"
+              inputMode="email"
               placeholderTextColor="#BDBDBD"
-              onChangeText={setPassword}
-              value={password}
-              secureTextEntry={isShowPass}
-              onFocus={handleOnFocus("focus", "passInput")}
-              onBlur={handleOnFocus("blur", "passInput")}
+              onChangeText={setEmail}
+              value={email}
+              onFocus={handleOnFocus("focus", "emailInput")}
+              onBlur={handleOnFocus("blur", "emailInput")}
             />
-            <Pressable style={styles.showPassBtn} onPress={handleShowPass}>
-              <Text style={styles.showPassText}>
-                {isShowPass ? "Показати" : "Сховати"}
-              </Text>
+            <View style={styles.passwordInput}>
+              <TextInput
+                ref={passInput}
+                style={[...inputStyle(passInput), { marginBottom: 43 }]}
+                placeholder="Пароль"
+                placeholderTextColor="#BDBDBD"
+                onChangeText={setPassword}
+                value={password}
+                secureTextEntry={isShowPass}
+                onFocus={handleOnFocus("focus", "passInput")}
+                onBlur={handleOnFocus("blur", "passInput")}
+              />
+              <Pressable style={styles.showPassBtn} onPress={handleShowPass}>
+                <Text style={styles.showPassText}>
+                  {isShowPass ? "Показати" : "Сховати"}
+                </Text>
+              </Pressable>
+            </View>
+            <Pressable style={styles.loginBtn} onPress={handleSubmit}>
+              <Text style={styles.loginText}>Увійти</Text>
+            </Pressable>
+          </KeyboardAvoidingView>
+          <View style={styles.questionCont}>
+            <Text style={styles.questionText}>Немає акаунту? </Text>
+            <Pressable onPress={() => navigation.navigate("Registration")}>
+              <Text style={styles.questionText}>Зареєструватися</Text>
             </Pressable>
           </View>
-          <Pressable style={styles.loginBtn} onPress={handleSubmit}>
-            <Text style={styles.loginText}>Увійти</Text>
-          </Pressable>
-        </KeyboardAvoidingView>
-        <View style={styles.questionCont}>
-          <Text style={styles.questionText}>Немає акаунту? </Text>
-          <Pressable>
-            <Text style={styles.questionText}>Зареєструватися</Text>
-          </Pressable>
         </View>
       </View>
     </TouchableWithoutFeedback>
@@ -109,6 +115,7 @@ export const LoginScreen = () => {
 };
 
 const styles = StyleSheet.create({
+  container: { flex: 1, justifyContent: "flex-end" },
   loginContainer: {
     position: "relative",
     width: "100%",

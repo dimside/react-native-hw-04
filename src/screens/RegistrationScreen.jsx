@@ -1,3 +1,4 @@
+import { useNavigation } from "@react-navigation/native";
 import { useRef, useState } from "react";
 import {
   View,
@@ -22,6 +23,8 @@ export const RegistrationScreen = () => {
   const [isShowPass, setIsShowPass] = useState(true);
   const [isFocus, setIsFocus] = useState(false);
 
+  const navigation = useNavigation();
+
   const loginInput = useRef();
   const emailInput = useRef();
   const passInput = useRef();
@@ -38,6 +41,7 @@ export const RegistrationScreen = () => {
     setLogin(null);
     setEmail(null);
     setPassword(null);
+    navigation.navigate("Home", { screen: "PostsScreen" });
   };
 
   const handleOnFocus = (type, inputName) => {
@@ -60,6 +64,7 @@ export const RegistrationScreen = () => {
         return;
     }
   };
+
   const inputStyle = (inputName) => {
     return [
       styles.input,
@@ -71,68 +76,70 @@ export const RegistrationScreen = () => {
 
   return (
     <TouchableWithoutFeedback onPress={Keyboard.dismiss}>
-      <View style={styles.registrationContainer}>
-        <View style={styles.userImgCont}>
-          {userImage && <Image style={styles.userImg} source={UserImg} />}
-          <Pressable style={styles.addButton} onPress={handleAddBtnPress}>
-            <Image
-              source={userImage ? DelBtn : AddBtn}
-              style={styles.addBtnImg}
-            />
-          </Pressable>
-        </View>
-        <Text style={styles.title}>Реєстрація</Text>
-        <KeyboardAvoidingView
-          behavior={Platform.OS === "ios" ? "padding" : "height"}
-        >
-          <TextInput
-            style={inputStyle(loginInput)}
-            placeholder="Логін"
-            placeholderTextColor="#BDBDBD"
-            onChangeText={setLogin}
-            value={login}
-            ref={loginInput}
-            onFocus={handleOnFocus("focus", "loginInput")}
-            onBlur={handleOnFocus("blur", "loginInput")}
-          />
-          <TextInput
-            style={inputStyle(emailInput)}
-            placeholder="Адреса електронної пошти"
-            inputMode="email"
-            placeholderTextColor="#BDBDBD"
-            onChangeText={setEmail}
-            value={email}
-            ref={emailInput}
-            onFocus={handleOnFocus("focus", "emailInput")}
-            onBlur={handleOnFocus("blur", "emailInput")}
-          />
-          <View style={styles.passwordInput}>
-            <TextInput
-              style={[...inputStyle(passInput), { marginBottom: 43 }]}
-              placeholder="Пароль"
-              placeholderTextColor="#BDBDBD"
-              onChangeText={setPassword}
-              value={password}
-              secureTextEntry={isShowPass}
-              ref={passInput}
-              onFocus={handleOnFocus("focus", "passInput")}
-              onBlur={handleOnFocus("blur", "passInput")}
-            />
-            <Pressable style={styles.showPassBtn} onPress={handleShowPass}>
-              <Text style={styles.showPassText}>
-                {isShowPass ? "Показати" : "Сховати"}
-              </Text>
+      <View style={styles.container}>
+        <View style={styles.registrationContainer}>
+          <View style={styles.userImgCont}>
+            {userImage && <Image style={styles.userImg} source={UserImg} />}
+            <Pressable style={styles.addButton} onPress={handleAddBtnPress}>
+              <Image
+                source={userImage ? DelBtn : AddBtn}
+                style={styles.addBtnImg}
+              />
             </Pressable>
           </View>
-          <Pressable style={styles.registerBtn} onPress={handleSubmit}>
-            <Text style={styles.registerText}>Зареєстуватися</Text>
-          </Pressable>
-        </KeyboardAvoidingView>
-        <View style={styles.questionCont}>
-          <Text style={styles.questionText}>Вже є акаунт? </Text>
-          <Pressable>
-            <Text style={styles.questionText}>Увійти</Text>
-          </Pressable>
+          <Text style={styles.title}>Реєстрація</Text>
+          <KeyboardAvoidingView
+            behavior={Platform.OS === "ios" ? "padding" : "height"}
+          >
+            <TextInput
+              style={inputStyle(loginInput)}
+              placeholder="Логін"
+              placeholderTextColor="#BDBDBD"
+              onChangeText={setLogin}
+              value={login}
+              ref={loginInput}
+              onFocus={handleOnFocus("focus", "loginInput")}
+              onBlur={handleOnFocus("blur", "loginInput")}
+            />
+            <TextInput
+              style={inputStyle(emailInput)}
+              placeholder="Адреса електронної пошти"
+              inputMode="email"
+              placeholderTextColor="#BDBDBD"
+              onChangeText={setEmail}
+              value={email}
+              ref={emailInput}
+              onFocus={handleOnFocus("focus", "emailInput")}
+              onBlur={handleOnFocus("blur", "emailInput")}
+            />
+            <View style={styles.passwordInput}>
+              <TextInput
+                style={[...inputStyle(passInput), { marginBottom: 43 }]}
+                placeholder="Пароль"
+                placeholderTextColor="#BDBDBD"
+                onChangeText={setPassword}
+                value={password}
+                secureTextEntry={isShowPass}
+                ref={passInput}
+                onFocus={handleOnFocus("focus", "passInput")}
+                onBlur={handleOnFocus("blur", "passInput")}
+              />
+              <Pressable style={styles.showPassBtn} onPress={handleShowPass}>
+                <Text style={styles.showPassText}>
+                  {isShowPass ? "Показати" : "Сховати"}
+                </Text>
+              </Pressable>
+            </View>
+            <Pressable style={styles.registerBtn} onPress={handleSubmit}>
+              <Text style={styles.registerText}>Зареєстуватися</Text>
+            </Pressable>
+          </KeyboardAvoidingView>
+          <View style={styles.questionCont}>
+            <Text style={styles.questionText}>Вже є акаунт? </Text>
+            <Pressable onPress={() => navigation.navigate("Login")}>
+              <Text style={styles.questionText}>Увійти</Text>
+            </Pressable>
+          </View>
         </View>
       </View>
     </TouchableWithoutFeedback>
@@ -140,6 +147,7 @@ export const RegistrationScreen = () => {
 };
 
 const styles = StyleSheet.create({
+  container: { flex: 1, justifyContent: "flex-end" },
   registrationContainer: {
     position: "relative",
     width: "100%",
